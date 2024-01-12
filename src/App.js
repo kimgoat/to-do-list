@@ -1,9 +1,9 @@
-
+import MainBoard from './components/MainBoard';
 
 function App() {
   return (
     <>
-      to do list
+      <MainBoard />
     </>
   );
 }
