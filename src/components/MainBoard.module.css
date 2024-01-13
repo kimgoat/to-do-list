@@ -7,8 +7,6 @@
   background-color: beige;
 }
 
-.testbox {
-  justify-content: center;
-  background-color: rgb(253, 255, 240);
-  border-radius: 30px;
+.test {
+  background-color: rgb(201, 241, 0);
 }

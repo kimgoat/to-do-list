@@ -1,38 +1,52 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./SearchBar.module.css";
 import { useImmer } from "use-immer";
 
 export default function SearchBar() {
   const [list, updateList] = useImmer(initalList);
-  const [text, setText] = useState("");
+  const [input, setIntput] = useState("");
+  const [toDo, setToDo] = useState("");
+
+  var today = new Date();
+  var year = today.getFullYear();
+  var month = ("0" + (today.getMonth() + 1)).slice(-2);
+  var day = ("0" + today.getDate()).slice(-2);
+  var dateString = year + "-" + month + "-" + day;
+
+  useEffect(() => {
+    const localData = localStorage.getItem("list");
+    if (localData) {
+      updateList(JSON.parse(localData));
+    }
+  }, []);
 
   const handleAdd = (e) => {
     const title = e.target.value;
-    const status = "Active";
+    const status = true;
+    const start_date = dateString;
+    const end_date = undefined;
+    const deadline = undefined;
 
     updateList((list) => {
-      list.todos.push({ title, status });
+      list.todos.push({ title, status, start_date, end_date, deadline });
+      localStorage.setItem("list", JSON.stringify(list));
     });
-    // console.log(list.todos);
   };
 
   function enterkeyEvent(e) {
-    if (window.event.keyCode == 13) {
+    if (e.key == "Enter") {
+      e.preventDefault();
       handleAdd(e);
-      setText("");
     }
   }
 
   const textHandler = (e) => {
     const inputText = e.target.value;
-    setText(inputText);
+    setIntput(inputText);
   };
 
   return (
     <>
-      {list.todos.map((todo, index) => (
-        <p key={index}>{todo.title}</p>
-      ))}
       <div className={styles.container}>
         <input
           className={styles.input}
@@ -41,7 +55,7 @@ export default function SearchBar() {
           name="todo"
           placeholder="input"
           onChange={textHandler}
-          value={text}
+          value={input}
           onKeyUp={(e) => {
             enterkeyEvent(e);
           }}
@@ -56,6 +70,9 @@ const initalList = {
     {
       title: null,
       status: null,
+      start_date: null,
+      end_date: null,
+      deadline: null,
     },
   ],
 };

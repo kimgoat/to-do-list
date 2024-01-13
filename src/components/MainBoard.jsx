@@ -5,6 +5,7 @@ import { Resizable } from "re-resizable";
 import Header from "./Header";
 import List from "./List";
 import SearchBar from "./SearchBar";
+import TimeTimer from "./TimeTimer";
 
 export default function MainBoard() {
   //   const [list, updateList] = useImmer(initalList);
@@ -20,16 +21,21 @@ export default function MainBoard() {
   //   };
 
   return (
-    <div className={styles.container}>
-      <Resizable
-        className={styles.testbox}
-        defaultSize={{ width: 500, height: 600 }}
-      >
-        <Header />
-        <List />
-        <SearchBar on />
-      </Resizable>
-    </div>
+    <>
+      {/* <TimeTimer /> */}
+      <div className={styles.container}>
+        <Resizable
+          defaultSize={{ width: 500, height: 600 }}
+          minHeight={300}
+          minWidth={300}
+          className={styles.test}
+        >
+          <Header />
+          <List />
+          {/* <SearchBar /> */}
+        </Resizable>
+      </div>
+    </>
   );
 }
 
