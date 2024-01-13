@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./ListItem.module.css";
 
-export default function ListItem({ index, todo }) {
+export default function ListItem({ handleDelete, todo, index }) {
+  const [title, setTitle] = useState(todo.title);
+
   return (
     <>
       <div className={styles.container}>
-        <p key={index}>
-          {todo.title} {index}
-        </p>
-        <button key={index} onClick={() => console.log(index)}>
+        <p>{todo.title}</p>
+        <button
+          key={index}
+          onClick={() => {
+            setTitle(title);
+            handleDelete(title);
+          }}
+        >
           delete
         </button>
       </div>

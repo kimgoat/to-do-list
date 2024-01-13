@@ -6,7 +6,14 @@ import ListItem from "./ListItem";
 export default function List() {
   const [list, updateList] = useImmer(initalList);
   const [input, setIntput] = useState("");
-  const [toDo, setToDo] = useState("");
+
+  const handleDelete = (title) => {
+    updateList((list) => {
+      const index = list.todos.findIndex((todo) => todo.title == title);
+      list.todos.splice(index, 1);
+      localStorage.setItem("list", JSON.stringify(list));
+    });
+  };
 
   var today = new Date();
   var year = today.getFullYear();
@@ -51,7 +58,16 @@ export default function List() {
     <div className={styles.container}>
       <div className={styles.list_container}>
         {list.todos.map((todo, index) => {
-          return todo.title != null && <ListItem index={index} todo={todo} />;
+          return (
+            todo.title != null && (
+              <ListItem
+                handleDelete={handleDelete}
+                key={index}
+                index={index}
+                todo={todo}
+              />
+            )
+          );
         })}
       </div>
       <div className={styles.input_container}>
