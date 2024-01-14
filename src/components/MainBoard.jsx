@@ -1,24 +1,17 @@
-import React, { useState } from "react";
 import styles from "./MainBoard.module.css";
-import { useImmer } from "use-immer";
 import { Resizable } from "re-resizable";
 import Header from "./Header";
 import List from "./List";
 import SearchBar from "./SearchBar";
 import TimeTimer from "./TimeTimer";
+import { useEffect, useState } from "react";
 
 export default function MainBoard() {
-  //   const [list, updateList] = useImmer(initalList);
+  const [itemFilter, setItemFilter] = useState("All");
 
-  //   const handleAdd = (todos) => {
-  //     const title = e.target.value;
-  //     const status = "Active";
-
-  //     updateList((list) => {
-  //       list.todos.push({ title, status });
-  //     });
-  //     // console.log(list.todos);
-  //   };
+  const handleFilter = (state) => {
+    setItemFilter(state);
+  };
 
   return (
     <>
@@ -26,24 +19,17 @@ export default function MainBoard() {
       <div className={styles.container}>
         <Resizable
           defaultSize={{ width: 500, height: 600 }}
-          minHeight={300}
-          minWidth={300}
+          minHeight={400}
+          maxHeight={700}
+          minWidth={400}
+          maxWidth={900}
           className={styles.test}
         >
-          <Header />
-          <List />
+          <Header handleFilter={handleFilter} />
+          <List itemFilter={itemFilter} />
           {/* <SearchBar /> */}
         </Resizable>
       </div>
     </>
   );
 }
-
-const initalList = {
-  todos: [
-    {
-      title: null,
-      status: null,
-    },
-  ],
-};
