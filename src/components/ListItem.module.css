@@ -11,36 +11,34 @@
 }
 
 .info_container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .info_icon {
+  position: relative;
   display: flex;
-  background-color: aqua;
+  justify-content: center;
+  align-items: center;
+  background-color: salmon;
   width: 30px;
   height: 30px;
   border-radius: 100%;
+  cursor: pointer;
 }
 
 .info_icon:hover ~ .info_list {
   display: block;
+  cursor: pointer;
 }
+
 .info_list {
-  left: -200px;
   display: none;
   position: absolute;
+  left: 20px;
   width: 180px;
   background-color: darkgrey;
   border-radius: 10px;
   padding: 8px;
-}
-
-.test {
-  background-color: blue;
-  width: 50px;
-  height: 100px;
+  z-index: 1;
 }
 
 .dDay_counter_container {

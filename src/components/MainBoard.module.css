@@ -5,8 +5,8 @@
   width: 100vw;
   height: 100vh;
   background-color: beige;
+  overflow: scroll;
 }
 
-.test {
-  background-color: rgb(201, 241, 0);
+.resizable_container {
 }

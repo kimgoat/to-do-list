@@ -5,12 +5,14 @@ export default function ListItem({
   handleDelete,
   handleState,
   handleUpdate,
+  handleCompleted,
   todo,
   index,
 }) {
-  const [state, setState] = useState(todo.status);
+  const [checked, setChecked] = useState(todo.checked);
   const [deadline, setDeadline] = useState(todo.deadline);
   const [dDay, setDDay] = useState(0);
+  const [completedDay, setCompletedDay] = useState(todo.completed_date);
   const key = todo.key;
 
   var now_utc = Date.now();
@@ -30,46 +32,60 @@ export default function ListItem({
         {/* 투두리스트 체크박스 */}
         <input
           type="checkbox"
-          checked={state}
+          checked={checked}
           onChange={() => {
-            setState(!state);
-            handleState(key, state);
+            setChecked(!checked);
+            handleState(key, checked);
+            setCompletedDay(minDay);
+            handleCompleted(key, completedDay);
           }}
         />
         {/* 투두리스트 등록 날짜와 마감날짜 공지 */}
         <div className={styles.info_container}>
           <div className={styles.info_icon}>i</div>
           <div className={styles.info_list}>
-            시작: {todo.start_date}
-            <br />
-            종료: {todo.deadline}
+            <p>시작: {todo.start_date}</p>
+            {deadline != undefined && <p>목표: {todo.deadline}</p>}
+            {completedDay != undefined && todo.checked && (
+              <p>완료: {completedDay}</p>
+            )}
           </div>
         </div>
+
+        {/* 투두리스트 등록 내용 */}
         <div className={styles.content}>
-          {/* 투두리스트 등록 내용 */}
           <p>{todo.title}</p>
         </div>
 
         {/* 투두리스트 마감날짜 설정  */}
-        <div className={styles.deadline_container}>
-          <input
-            className={styles.deadline_input}
-            type="date"
-            min={minDay}
-            defaultValue={deadline}
-            onChange={(e) => {
-              setDeadline(e.target.value);
-              handleUpdate(key, e.target.value);
-            }}
-          />
-        </div>
+        {!checked && (
+          <div className={styles.deadline_container}>
+            <input
+              className={styles.deadline_input}
+              type="date"
+              min={minDay}
+              defaultValue={deadline}
+              onChange={(e) => {
+                setDeadline(e.target.value);
+                handleUpdate(key, e.target.value);
+              }}
+            />
+          </div>
+        )}
 
         {/* 디데이 */}
-        {!isNaN(dDay) && (
-          <div className={styles.dDay_counter_container}>
-            D{dDay < 0 ? `${"+"}` : `${" "}`}
-            {-dDay}
-          </div>
+        {!checked && (
+          <>
+            {!isNaN(dDay) && (
+              <div className={styles.dDay_counter_container}>
+                {dDay === 0
+                  ? `${"TODAY"}`
+                  : dDay < 0
+                  ? `${"D + " + `${dDay}`}`
+                  : `${"D - " + `${dDay}`}`}
+              </div>
+            )}
+          </>
         )}
 
         {/* 삭제 버튼 */}
@@ -77,6 +93,7 @@ export default function ListItem({
           key={index}
           onClick={() => {
             handleDelete(key);
+            // window.location.reload();
           }}
         >
           delete

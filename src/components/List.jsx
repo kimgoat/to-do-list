@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styles from "./List.module.css";
 import { useImmer } from "use-immer";
 import { v4 as uuidv4 } from "uuid";
 import ListItem from "./ListItem";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 export default function List({ itemFilter }) {
   const [list, updateList] = useImmer(initalList);
   const [input, setIntput] = useState("");
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
 
   var today = new Date();
   var year = today.getFullYear();
@@ -24,13 +26,22 @@ export default function List({ itemFilter }) {
   const handleAdd = (e) => {
     const key = e.target.id;
     const title = e.target.value;
-    const status = false;
+    const checked = false;
     const start_date = dateString;
     const end_date = undefined;
     const deadline = undefined;
+    const completed_date = undefined;
 
     updateList((list) => {
-      list.todos.push({ key, title, status, start_date, end_date, deadline });
+      list.todos.push({
+        key,
+        title,
+        checked,
+        start_date,
+        end_date,
+        deadline,
+        completed_date,
+      });
       localStorage.setItem("list", JSON.stringify(list));
     });
   };
@@ -43,22 +54,28 @@ export default function List({ itemFilter }) {
     });
   };
 
-  const handleState = (key, status) => {
+  const handleState = (key, checked) => {
     updateList((list) => {
       const todo = list.todos.find(
-        (todo) => todo.status === status && todo.key === key
+        (todo) => todo.checked === checked && todo.key === key
       );
-      todo.status = !status;
+      todo.checked = !checked;
       localStorage.setItem("list", JSON.stringify(list));
     });
   };
 
   const handleUpdate = (key, deadline) => {
-    const current = deadline;
-
     updateList((list) => {
       const todo = list.todos.find((todo) => todo.key === key);
-      todo.deadline = current;
+      todo.deadline = deadline;
+      localStorage.setItem("list", JSON.stringify(list));
+    });
+  };
+
+  const handleCompleted = (key, completed_date) => {
+    updateList((list) => {
+      const todo = list.todos.find((todo) => todo.key === key);
+      todo.completed_date = completed_date;
       localStorage.setItem("list", JSON.stringify(list));
     });
   };
@@ -78,80 +95,169 @@ export default function List({ itemFilter }) {
 
   return (
     <>
-      <div className={styles.container}>
-        {itemFilter == "All" && (
-          <div className={styles.list_container}>
-            {list.todos.map((todo, index) => {
-              return (
-                todo.title != null && (
-                  <ListItem
-                    handleDelete={handleDelete}
-                    handleState={handleState}
-                    handleUpdate={handleUpdate}
-                    key={index}
-                    index={index}
-                    todo={todo}
-                  />
-                )
-              );
-            })}
-          </div>
-        )}
-        {itemFilter == "Active" && (
-          <div className={styles.list_container}>
-            {list.todos.map((todo, index) => {
-              return (
-                todo.title != null &&
-                todo.status == false && (
-                  <ListItem
-                    handleDelete={handleDelete}
-                    handleState={handleState}
-                    handleUpdate={handleUpdate}
-                    key={index}
-                    index={index}
-                    todo={todo}
-                  />
-                )
-              );
-            })}
-          </div>
-        )}
-        {itemFilter == "Completed" && (
-          <div className={styles.list_container}>
-            {list.todos.map((todo, index) => {
-              return (
-                todo.title != null &&
-                todo.status == true && (
-                  <ListItem
-                    handleDelete={handleDelete}
-                    handleState={handleState}
-                    handleUpdate={handleUpdate}
-                    key={index}
-                    index={index}
-                    todo={todo}
-                  />
-                )
-              );
-            })}
-          </div>
-        )}
+      {darkMode ? (
+        <div
+          className={styles.container}
+          style={{ backgroundColor: "black", color: "white" }}
+        >
+          {itemFilter == "All" && (
+            <div className={styles.list_container}>
+              {list.todos.map((todo, index) => {
+                return (
+                  todo.title != null && (
+                    <ListItem
+                      handleDelete={handleDelete}
+                      handleState={handleState}
+                      handleUpdate={handleUpdate}
+                      handleCompleted={handleCompleted}
+                      key={index}
+                      index={index}
+                      todo={todo}
+                    />
+                  )
+                );
+              })}
+            </div>
+          )}
+          {itemFilter == "Active" && (
+            <div className={styles.list_container}>
+              {list.todos.map((todo, index) => {
+                return (
+                  todo.title != null &&
+                  !todo.checked && (
+                    <ListItem
+                      handleDelete={handleDelete}
+                      handleState={handleState}
+                      handleUpdate={handleUpdate}
+                      handleCompleted={handleCompleted}
+                      key={index}
+                      index={index}
+                      todo={todo}
+                    />
+                  )
+                );
+              })}
+            </div>
+          )}
+          {itemFilter == "Completed" && (
+            <div className={styles.list_container}>
+              {list.todos.map((todo, index) => {
+                return (
+                  todo.title != null &&
+                  todo.checked && (
+                    <ListItem
+                      handleDelete={handleDelete}
+                      handleState={handleState}
+                      handleUpdate={handleUpdate}
+                      handleCompleted={handleCompleted}
+                      key={index}
+                      index={index}
+                      todo={todo}
+                    />
+                  )
+                );
+              })}
+            </div>
+          )}
 
-        {/* 투두리스트 입력란 */}
-        <div className={styles.input_container}>
-          <input
-            className={styles.input}
-            type="text"
-            id={uuidv4()}
-            name="todo"
-            placeholder="input"
-            onChange={textHandler}
-            value={input}
-            onKeyDown={(e) => {
-              enterkeyEvent(e);
-            }}
-          />
+          {/* 투두리스트 입력란 */}
+          <div className={styles.input_container}>
+            <input
+              className={styles.input}
+              type="text"
+              id={uuidv4()}
+              name="todo"
+              placeholder="input"
+              onChange={textHandler}
+              value={input}
+              onKeyDown={(e) => {
+                enterkeyEvent(e);
+              }}
+            />
+          </div>
         </div>
-      </div>
+      ) : (
+        <div
+          className={styles.container}
+          style={{ backgroundColor: "white", color: "black" }}
+        >
+          {itemFilter == "All" && (
+            <div className={styles.list_container}>
+              {list.todos.map((todo, index) => {
+                return (
+                  todo.title != null && (
+                    <ListItem
+                      handleDelete={handleDelete}
+                      handleState={handleState}
+                      handleUpdate={handleUpdate}
+                      handleCompleted={handleCompleted}
+                      key={index}
+                      index={index}
+                      todo={todo}
+                    />
+                  )
+                );
+              })}
+            </div>
+          )}
+          {itemFilter == "Active" && (
+            <div className={styles.list_container}>
+              {list.todos.map((todo, index) => {
+                return (
+                  todo.title != null &&
+                  !todo.checked && (
+                    <ListItem
+                      handleDelete={handleDelete}
+                      handleState={handleState}
+                      handleUpdate={handleUpdate}
+                      handleCompleted={handleCompleted}
+                      key={index}
+                      index={index}
+                      todo={todo}
+                    />
+                  )
+                );
+              })}
+            </div>
+          )}
+          {itemFilter == "Completed" && (
+            <div className={styles.list_container}>
+              {list.todos.map((todo, index) => {
+                return (
+                  todo.title != null &&
+                  todo.checked && (
+                    <ListItem
+                      handleDelete={handleDelete}
+                      handleState={handleState}
+                      handleUpdate={handleUpdate}
+                      handleCompleted={handleCompleted}
+                      key={index}
+                      index={index}
+                      todo={todo}
+                    />
+                  )
+                );
+              })}
+            </div>
+          )}
+
+          {/* 투두리스트 입력란 */}
+          <div className={styles.input_container}>
+            <input
+              className={styles.input}
+              type="text"
+              id={uuidv4()}
+              name="todo"
+              placeholder="input"
+              onChange={textHandler}
+              value={input}
+              onKeyDown={(e) => {
+                enterkeyEvent(e);
+              }}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 }
@@ -160,10 +266,11 @@ const initalList = {
   todos: [
     {
       //   title: null,
-      //   status: null,
+      //   checked: null,
       //   start_date: null,
       //   end_date: null,
       //   deadline: null,
+      // completed_date = null
     },
   ],
 };

@@ -1,12 +1,11 @@
 .container {
-  height: inherit;
-  width: inherit;
-  border-color: aqua;
+  height: auto;
 }
 
 .list_container {
-  height: 100%;
   width: auto;
+  height: 500px;
+  overflow: scroll;
 }
 
 .input_container {
