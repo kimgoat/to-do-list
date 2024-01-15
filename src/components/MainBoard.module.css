@@ -6,6 +6,7 @@
   height: 100vh;
   background-color: beige;
   overflow: scroll;
+  background-size: cover;
 }
 
 .resizable_container {
