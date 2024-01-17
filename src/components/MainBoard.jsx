@@ -2,14 +2,16 @@ import styles from "./MainBoard.module.css";
 import Header from "./Header";
 import List from "./List";
 import Modal from "./Modal";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useSpring, animated } from "react-spring";
 import { useDrag } from "react-use-gesture";
-import { DarkModeProvider } from "../context/DarkModeContext";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 export default function MainBoard() {
   const [itemFilter, setItemFilter] = useState("All");
   const [backgroundImg, setBackgroundImg] = useState(null);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
+
   const settings = [
     { id: 1, title: "배경 이미지 설정하기" },
     { id: 2, title: "다크모드" },
@@ -45,7 +47,7 @@ export default function MainBoard() {
   });
 
   return (
-    <DarkModeProvider>
+    <>
       <div
         className={styles.container}
         style={{
@@ -88,7 +90,15 @@ export default function MainBoard() {
                       return (
                         <>
                           <li id={settings.id}>{settings.title}</li>
-                          <button>darkmode</button>
+                          {darkMode ? (
+                            <button onClick={() => toggleDarkMode()}>
+                              끄기
+                            </button>
+                          ) : (
+                            <button onClick={() => toggleDarkMode()}>
+                              켜기
+                            </button>
+                          )}
                         </>
                       );
                   }
@@ -100,6 +110,6 @@ export default function MainBoard() {
         </div>
         {/* </animated.div> */}
       </div>
-    </DarkModeProvider>
+    </>
   );
 }
