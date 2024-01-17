@@ -81,7 +81,7 @@ export default function ListItem({
                 {dDay === 0
                   ? `${"TODAY"}`
                   : dDay < 0
-                  ? `${"D + " + `${dDay}`}`
+                  ? `${"D + " + `${-dDay}`}`
                   : `${"D - " + `${dDay}`}`}
               </div>
             )}
