@@ -54,14 +54,16 @@ export default function MainBoard() {
           onChange={handleChangeImg}
         />
 
-        <animated.div
+        {/* <animated.div
           {...bindListPosition()}
           className={styles.to_do_list_container}
           style={{ x: listPosition.x, y: listPosition.y }}
-        >
+        > */}
+        <div>
           <Header handleFilter={handleFilter} />
           <List itemFilter={itemFilter} />
-        </animated.div>
+        </div>
+        {/* </animated.div> */}
       </div>
     </DarkModeProvider>
   );
