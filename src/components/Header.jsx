@@ -3,7 +3,7 @@ import styles from "./Header.module.css";
 import Button from "./Button";
 import { DarkModeContext } from "../context/DarkModeContext";
 
-export default function Header({ handleFilter }) {
+export default function Header({ handleFilter, children }) {
   const buttonList = ["All", "Active", "Completed"];
   const [state, setState] = useState("All");
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
@@ -12,6 +12,7 @@ export default function Header({ handleFilter }) {
     <>
       {darkMode ? (
         <div className={styles.container}>
+          {children}
           <button onClick={() => toggleDarkMode()}>darkmode</button>
           <div className={styles.filter_container}>
             {buttonList.map((name, index) => {
@@ -32,6 +33,7 @@ export default function Header({ handleFilter }) {
         </div>
       ) : (
         <div className={styles.container}>
+          {children}
           <button onClick={() => toggleDarkMode()}>whiteMode</button>
           <div className={styles.filter_container}>
             {buttonList.map((name, index) => {

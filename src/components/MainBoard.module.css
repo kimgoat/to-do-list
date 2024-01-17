@@ -11,5 +11,11 @@
 }
 
 .to_do_list_container {
-  background-color: black;
+}
+
+.background_label {
+}
+
+.background_input {
+  /* display: none; */
 }

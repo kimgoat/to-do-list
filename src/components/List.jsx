@@ -80,6 +80,14 @@ export default function List({ itemFilter }) {
     });
   };
 
+  const handleEditChange = (key, changeTitle) => {
+    updateList((list) => {
+      const todo = list.todos.find((todo) => todo.key === key);
+      todo.title = changeTitle;
+      localStorage.setItem("list", JSON.stringify(list));
+    });
+  };
+
   function enterkeyEvent(e) {
     if (e.key == "Enter" && e.nativeEvent.isComposing == false) {
       e.preventDefault();
@@ -110,6 +118,7 @@ export default function List({ itemFilter }) {
                       handleState={handleState}
                       handleUpdate={handleUpdate}
                       handleCompleted={handleCompleted}
+                      handleEditChange={handleEditChange}
                       key={index}
                       index={index}
                       todo={todo}
@@ -130,6 +139,7 @@ export default function List({ itemFilter }) {
                       handleState={handleState}
                       handleUpdate={handleUpdate}
                       handleCompleted={handleCompleted}
+                      handleEditChange={handleEditChange}
                       key={index}
                       index={index}
                       todo={todo}
@@ -150,6 +160,7 @@ export default function List({ itemFilter }) {
                       handleState={handleState}
                       handleUpdate={handleUpdate}
                       handleCompleted={handleCompleted}
+                      handleEditChange={handleEditChange}
                       key={index}
                       index={index}
                       todo={todo}
@@ -191,6 +202,7 @@ export default function List({ itemFilter }) {
                       handleState={handleState}
                       handleUpdate={handleUpdate}
                       handleCompleted={handleCompleted}
+                      handleEditChange={handleEditChange}
                       key={index}
                       index={index}
                       todo={todo}
@@ -211,6 +223,7 @@ export default function List({ itemFilter }) {
                       handleState={handleState}
                       handleUpdate={handleUpdate}
                       handleCompleted={handleCompleted}
+                      handleEditChange={handleEditChange}
                       key={index}
                       index={index}
                       todo={todo}
@@ -231,6 +244,7 @@ export default function List({ itemFilter }) {
                       handleState={handleState}
                       handleUpdate={handleUpdate}
                       handleCompleted={handleCompleted}
+                      handleEditChange={handleEditChange}
                       key={index}
                       index={index}
                       todo={todo}

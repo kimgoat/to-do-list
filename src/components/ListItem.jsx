@@ -6,12 +6,14 @@ export default function ListItem({
   handleState,
   handleUpdate,
   handleCompleted,
+  handleEditChange,
   todo,
   index,
 }) {
   const [checked, setChecked] = useState(todo.checked);
   const [deadline, setDeadline] = useState(todo.deadline);
   const [dDay, setDDay] = useState(0);
+  const [title, setTitle] = useState(todo.title);
   const [completedDay, setCompletedDay] = useState(todo.completed_date);
   const key = todo.key;
 
@@ -54,7 +56,15 @@ export default function ListItem({
 
         {/* 투두리스트 등록 내용 */}
         <div className={styles.content}>
-          <p>{todo.title}</p>
+          <input
+            className={styles.todo_title}
+            value={title}
+            type="text"
+            onChange={(e) => {
+              setTitle(e.target.value);
+              handleEditChange(key, e.target.value);
+            }}
+          />
         </div>
 
         {/* 투두리스트 마감날짜 설정  */}
