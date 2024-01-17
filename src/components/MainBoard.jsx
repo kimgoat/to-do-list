@@ -1,18 +1,20 @@
 import styles from "./MainBoard.module.css";
-import { Resizable } from "re-resizable";
 import Header from "./Header";
 import List from "./List";
 import { useState, useEffect } from "react";
+import { useSpring, animated } from "react-spring";
+import { useDrag } from "react-use-gesture";
 import { DarkModeProvider } from "../context/DarkModeContext";
 
 export default function MainBoard() {
   const [itemFilter, setItemFilter] = useState("All");
   const [backgroundImg, setBackgroundImg] = useState(null);
+  const listPosition = useSpring({ x: 0, y: 0 });
 
   useEffect(() => {
-    const localData = localStorage.getItem("background-img");
-    if (localData) {
-      setBackgroundImg(JSON.parse(localData));
+    const localBackgroundImgData = localStorage.getItem("background-img");
+    if (localBackgroundImgData) {
+      setBackgroundImg(JSON.parse(localBackgroundImgData));
     }
   }, []);
 
@@ -26,6 +28,15 @@ export default function MainBoard() {
   const handleFilter = (state) => {
     setItemFilter(state);
   };
+
+  const bindListPosition = useDrag((params) => {
+    listPosition.x.set(params.offset[0]);
+    listPosition.y.set(params.offset[1]);
+    localStorage.setItem(
+      "position",
+      JSON.stringify({ x: listPosition.x, y: listPosition.y })
+    );
+  });
 
   return (
     <DarkModeProvider>
@@ -42,17 +53,15 @@ export default function MainBoard() {
           multiple
           onChange={handleChangeImg}
         />
-        <Resizable
-          defaultSize={{ width: 700, height: 600 }}
-          minHeight={600}
-          maxHeight={600}
-          minWidth={400}
-          maxWidth={900}
-          className={styles.resizable_container}
+
+        <animated.div
+          {...bindListPosition()}
+          className={styles.to_do_list_container}
+          style={{ x: listPosition.x, y: listPosition.y }}
         >
           <Header handleFilter={handleFilter} />
           <List itemFilter={itemFilter} />
-        </Resizable>
+        </animated.div>
       </div>
     </DarkModeProvider>
   );

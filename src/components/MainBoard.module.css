@@ -7,7 +7,9 @@
   background-color: beige;
   overflow: scroll;
   background-size: cover;
+  background-repeat: no-repeat;
 }
 
-.resizable_container {
+.to_do_list_container {
+  background-color: black;
 }
