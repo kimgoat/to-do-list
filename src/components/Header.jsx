@@ -10,15 +10,18 @@ export default function Header({ handleFilter, children }) {
       <div className={styles.container}>
         {children}
         <div className={styles.filter_container}>
-          {buttonList.map((name, index) => {
+          {buttonList.map((name) => {
             return (
               <button
-                key={index}
+                key={name}
                 id={name}
                 onClick={(e) => {
                   setState(e.target.id);
                   handleFilter(e.target.id);
                 }}
+                className={`${styles.filter} ${
+                  state === name && styles.selected
+                }`}
               >
                 {name}
               </button>

@@ -4,3 +4,25 @@
   background-color: pink;
   justify-content: space-between;
 }
+
+.filter {
+  background-color: transparent;
+  border: none;
+}
+.filter:hover {
+  opacity: 1;
+}
+.filter.selected {
+  opacity: 1;
+}
+
+.selected {
+  font-size: 15px;
+  color: black;
+}
+
+.filter.selected::after {
+  content: "";
+  display: block;
+  border: 1px solid red;
+}
