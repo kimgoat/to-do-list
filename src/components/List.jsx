@@ -7,8 +7,10 @@ import { DarkModeContext } from "../context/DarkModeContext";
 
 export default function List({ itemFilter }) {
   const [list, updateList] = useImmer(initalList);
+
   const [input, setIntput] = useState("");
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
+  const [refresh, setRefresh] = useState(1);
 
   var today = new Date();
   var year = today.getFullYear();
@@ -21,7 +23,7 @@ export default function List({ itemFilter }) {
     if (localData) {
       updateList(JSON.parse(localData));
     }
-  }, []);
+  }, [refresh]);
 
   const handleAdd = (e) => {
     const key = e.target.id;
@@ -44,14 +46,19 @@ export default function List({ itemFilter }) {
       });
       localStorage.setItem("list", JSON.stringify(list));
     });
+    setRefresh((refresh) => refresh * -1);
   };
 
   const handleDelete = (key) => {
-    updateList((list) => {
-      const index = list.todos.findIndex((todo) => todo.key == key);
-      list.todos.splice(index, 1);
-      localStorage.setItem("list", JSON.stringify(list));
-    });
+    // updateList((list) => {
+    //   const index = list.todos.findIndex((todo) => todo.key === key);
+    //   list.todos.splice(index, 1);
+    //   localStorage.setItem("list", JSON.stringify(list));
+    // });
+
+    const index = list.todos.findIndex((todo) => todo.key === key);
+    list.todos.splice(index, 1);
+    localStorage.setItem("list", JSON.stringify(list));
   };
 
   const handleState = (key, checked) => {
@@ -89,8 +96,11 @@ export default function List({ itemFilter }) {
   };
 
   function enterkeyEvent(e) {
-    if (e.key == "Enter" && e.nativeEvent.isComposing == false) {
+    if (e.key === "Enter" && e.nativeEvent.isComposing === false) {
       e.preventDefault();
+      if (e.target.value.trim().length === 0) {
+        return;
+      }
       setIntput("");
       handleAdd(e);
     }
@@ -102,13 +112,10 @@ export default function List({ itemFilter }) {
   };
 
   return (
-    <>
-      {darkMode ? (
-        <div
-          className={styles.container}
-          style={{ backgroundColor: "black", color: "white" }}
-        >
-          {itemFilter == "All" && (
+    list && (
+      <>
+        <div className={styles.container}>
+          {itemFilter === "All" && (
             <div className={styles.list_container}>
               {list.todos.map((todo, index) => {
                 return (
@@ -128,7 +135,7 @@ export default function List({ itemFilter }) {
               })}
             </div>
           )}
-          {itemFilter == "Active" && (
+          {itemFilter === "Active" && (
             <div className={styles.list_container}>
               {list.todos.map((todo, index) => {
                 return (
@@ -149,7 +156,7 @@ export default function List({ itemFilter }) {
               })}
             </div>
           )}
-          {itemFilter == "Completed" && (
+          {itemFilter === "Completed" && (
             <div className={styles.list_container}>
               {list.todos.map((todo, index) => {
                 return (
@@ -187,93 +194,19 @@ export default function List({ itemFilter }) {
             />
           </div>
         </div>
-      ) : (
-        <div
-          className={styles.container}
-          style={{ backgroundColor: "white", color: "black" }}
-        >
-          {itemFilter == "All" && (
-            <div className={styles.list_container}>
-              {list.todos.map((todo, index) => {
-                return (
-                  todo.title != null && (
-                    <ListItem
-                      handleDelete={handleDelete}
-                      handleState={handleState}
-                      handleUpdate={handleUpdate}
-                      handleCompleted={handleCompleted}
-                      handleEditChange={handleEditChange}
-                      key={index}
-                      index={index}
-                      todo={todo}
-                    />
-                  )
-                );
-              })}
-            </div>
-          )}
-          {itemFilter == "Active" && (
-            <div className={styles.list_container}>
-              {list.todos.map((todo, index) => {
-                return (
-                  todo.title != null &&
-                  !todo.checked && (
-                    <ListItem
-                      handleDelete={handleDelete}
-                      handleState={handleState}
-                      handleUpdate={handleUpdate}
-                      handleCompleted={handleCompleted}
-                      handleEditChange={handleEditChange}
-                      key={index}
-                      index={index}
-                      todo={todo}
-                    />
-                  )
-                );
-              })}
-            </div>
-          )}
-          {itemFilter == "Completed" && (
-            <div className={styles.list_container}>
-              {list.todos.map((todo, index) => {
-                return (
-                  todo.title != null &&
-                  todo.checked && (
-                    <ListItem
-                      handleDelete={handleDelete}
-                      handleState={handleState}
-                      handleUpdate={handleUpdate}
-                      handleCompleted={handleCompleted}
-                      handleEditChange={handleEditChange}
-                      key={index}
-                      index={index}
-                      todo={todo}
-                    />
-                  )
-                );
-              })}
-            </div>
-          )}
-
-          {/* 투두리스트 입력란 */}
-          <div className={styles.input_container}>
-            <input
-              className={styles.input}
-              type="text"
-              id={uuidv4()}
-              name="todo"
-              placeholder="input"
-              onChange={textHandler}
-              value={input}
-              onKeyDown={(e) => {
-                enterkeyEvent(e);
-              }}
-            />
-          </div>
-        </div>
-      )}
-    </>
+      </>
+    )
   );
+}
+
+function getFilterItems(list, itemFilter) {
+  if (itemFilter === "All") {
+    return list;
+  } else if (itemFilter === "Active") {
+    return list.todos.filter((todo) => todo.checked === false);
+  } else if (itemFilter === "Completed") {
+    return list.todos.filter((todo) => todo.checked === true);
+  }
 }
 
 const initalList = {

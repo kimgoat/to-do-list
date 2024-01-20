@@ -1,2 +1,10 @@
-.container {
+.modal_button {
+  background-color: #fff;
+  border: none;
+  border-radius: 8px;
+  /* box-shadow: 0 2px 8px -1px; */
+}
+
+.modal_button :hover {
+  /* box-shadow: 0 4px 20px -2px; */
 }

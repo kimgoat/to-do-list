@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import ReactModal from "react-modal";
 import styles from "./Modal.module.css";
 
+// icons
+import { CiSettings } from "react-icons/ci";
+import { CiEdit } from "react-icons/ci";
+
 export default function Modal({ title, children }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -40,7 +44,9 @@ export default function Modal({ title, children }) {
 
   return (
     <div className={styles.container}>
-      <button onClick={openModal}>{title}</button>
+      <button onClick={openModal} className={styles.modal_button}>
+        {title === "설정" ? <CiSettings size={20} /> : <CiEdit size={20} />}
+      </button>
       <ReactModal
         style={myModalStyles}
         isOpen={modalIsOpen}

@@ -3,6 +3,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 40px;
 }
 
 .content {
@@ -18,10 +19,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: salmon;
-  width: 30px;
-  height: 30px;
+  /* background-color: salmon; */
+  /* width: 23px;
+  height: 23px;
   border-radius: 100%;
+  border-style: ridge;
+  border-color: black; */
   cursor: pointer;
 }
 
@@ -49,5 +52,13 @@
 }
 
 .todo_title {
-  width: auto;
+  width: 355px;
+  height: 150px;
+  border: none;
+  resize: none;
+  font-size: 17px;
+}
+
+.todo_label {
+  min-width: 300px;
 }
