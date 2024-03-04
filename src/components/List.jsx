@@ -1,15 +1,13 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./List.module.css";
 import { useImmer } from "use-immer";
 import { v4 as uuidv4 } from "uuid";
 import ListItem from "./ListItem";
-import { DarkModeContext } from "../context/DarkModeContext";
 
 export default function List({ itemFilter }) {
   const [list, updateList] = useImmer(initalList);
 
   const [input, setIntput] = useState("");
-  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [refresh, setRefresh] = useState(1);
 
   var today = new Date();
@@ -62,6 +60,8 @@ export default function List({ itemFilter }) {
   };
 
   const handleState = (key, checked) => {
+    setRefresh((refresh) => refresh * -1);
+
     updateList((list) => {
       const todo = list.todos.find(
         (todo) => todo.checked === checked && todo.key === key
